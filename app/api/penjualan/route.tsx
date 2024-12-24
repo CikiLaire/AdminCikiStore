@@ -25,6 +25,7 @@ export async function POST(request: Request) {
       hargaModal: Number(formData.get("hargaModal")),
       hargaJual: Number(formData.get("hargaJual")),
       status: String(formData.get("status")),
+      createdAt: new Date(),
       updatedAt: new Date(),
     },
   });
