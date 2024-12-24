@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserTb {
+  id          Int           @id @default(autoincrement())
+  nama        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  PenjualanTb PenjualanTb[]
+}
+
+model HutangTb {
+  id        Int       @id @default(autoincrement())
+  nama      String
+  hutang    Int
+  tanggal   DateTime
+  sisa      Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  Cicilan   Cicilan[]
+}
+
+model Cicilan {
+  id        Int       @id @default(autoincrement())
+  hutangId  Int?
+  jumlah    Int
+  tanggal   DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  HutangTb  HutangTb? @relation(fields: [hutangId], references: [id])
+}
+
+model ListProdukTb {
+  id         Int        @id @default(autoincrement())
+  nama       String
+  hargaModal Int
+  hargaJual  Int
+  kategoriId Int
+  produkId   Int
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime
+  ProdukTb   ProdukTb   @relation(fields: [produkId], references: [id], onDelete: Cascade)
+  KategoriTb KategoriTb @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+}
+
+model PenjualanTb {
+  id            Int      @id @default(autoincrement())
+  userId        Int?
+  namaBarang    String
+  tanggal       DateTime
+  namaPelanggan String
+  hargaModal    Int
+  hargaJual     Int
+  status        String
+  kategori      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  UserTb        UserTb?  @relation(fields: [userId], references: [id])
+}
+
+model ProdukTb {
+  id           Int            @id @default(autoincrement())
+  nama         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  ListProdukTb ListProdukTb[]
+}
+
+model KategoriTb {
+  id           Int            @id @default(autoincrement())
+  nama         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  ListProdukTb ListProdukTb[]
+}
