@@ -13,6 +13,9 @@ export async function GET(
     where: {
       produkId: Number(id),
     },
+    orderBy: {
+      id: "asc",
+    },
     include: {
       ProdukTb: true,
       KategoriTb: true,
