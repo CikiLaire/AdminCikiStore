@@ -13,10 +13,10 @@ export default function DashboardAdmin() {
         const response = await fetch("/api/dashboard", { cache: "no-store" });
         const data = await response.json();
 
-        setPenjualan(data.totalPenjualan);
-        setUntung(data.totalUntung);
-        setPelanggan(data.totalPelanggan);
-        setProduk(data.totalProduk);
+        setPenjualan(data.totalPenjualan ?? 0);
+        setUntung(data.totalUntung ?? 0);
+        setPelanggan(data.totalPelanggan ?? 0);
+        setProduk(data.totalProduk ?? 0);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

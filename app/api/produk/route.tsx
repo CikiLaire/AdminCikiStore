@@ -9,6 +9,7 @@ export async function POST(request: Request) {
   await prisma.produkTb.create({
     data: {
       nama: String(formData.get("nama")),
+      kategori: String(formData.get("kategori")),
       updatedAt: new Date(),
     },
   });

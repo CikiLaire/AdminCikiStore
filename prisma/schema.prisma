@@ -43,6 +43,8 @@ model ListProdukTb {
   hargaJual  Int
   kategoriId Int
   produkId   Int
+  isSpecial  Boolean?   @default(false)
+  isArchived Boolean?   @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime
   ProdukTb   ProdukTb   @relation(fields: [produkId], references: [id], onDelete: Cascade)
@@ -67,6 +69,8 @@ model PenjualanTb {
 model ProdukTb {
   id           Int            @id @default(autoincrement())
   nama         String
+  image        String?
+  kategori     String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime
   ListProdukTb ListProdukTb[]

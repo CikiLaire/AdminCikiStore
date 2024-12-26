@@ -1,6 +1,6 @@
 import LoadingButton from "@/app/components/loadingButton";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface TambahProps {
   reload: Function;
@@ -9,11 +9,29 @@ interface TambahProps {
   isSukses: Function;
 }
 
+interface KategoriProps {
+  id: number;
+  nama: string;
+}
+
 const Tambah = ({ reload, isError, setPesan, isSukses }: TambahProps) => {
+  const [getKategori, setGetKategori] = useState<KategoriProps[]>([]);
+
   const [nama, setNama] = useState("");
+  const [kategori, setKategori] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await axios.get("/api/kategori");
+      const data = res.data;
+      setGetKategori(data);
+    };
+
+    getData();
+  }, []);
 
   const handleTambah = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,6 +47,7 @@ const Tambah = ({ reload, isError, setPesan, isSukses }: TambahProps) => {
     try {
       const formData = new FormData();
       formData.append("nama", nama);
+      formData.append("kategori", kategori);
 
       const res = await axios.post("/api/produk", formData, {
         headers: {
@@ -82,10 +101,26 @@ const Tambah = ({ reload, isError, setPesan, isSukses }: TambahProps) => {
               value={nama}
               onChange={(e) => setNama(e.target.value)}
             />
-            {/* Menampilkan pesan kesalahan */}
             {errorMsg && (
               <p className="text-red-500 text-sm mt-2">{errorMsg}</p>
             )}
+            <div className="mt-5">
+              <label className="label">Kategori</label>
+              <select
+                className="select select-bordered w-full"
+                value={kategori}
+                onChange={(e) => setKategori(e.target.value)}
+              >
+                <option disabled selected value={""}>
+                  Pilih Kategori
+                </option>
+                {getKategori.map((kategori) => (
+                  <option key={kategori.id} value={kategori.nama}>
+                    {kategori.nama}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="modal-action">
               <button className="btn" type="button" onClick={handleModal}>
                 Tutup
