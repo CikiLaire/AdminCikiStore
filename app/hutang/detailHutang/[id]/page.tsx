@@ -62,8 +62,8 @@ const DetailHutangPage = () => {
 
   const loadData = async () => {
     try {
-      const res = await axios.get(`/api/detailHutang/${id}`);
-      const data = res.data;
+      const res = await fetch(`/api/detailHutang/${id}`, { cache: "no-store" });
+      const data = await res.json();
       setData(data);
     } catch (error) {
       console.error("Error loading data:", error);
@@ -115,8 +115,8 @@ const DetailHutangPage = () => {
 
   const loadCicilan = async () => {
     try {
-      const res = await axios.get(`/api/detailHutang`);
-      const data = res.data;
+      const res = await fetch("/api/detailHutang", { cache: "no-store" });
+      const data = await res.json();
       setCicilan(data);
     } catch (error) {
       console.log("error", error);

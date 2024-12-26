@@ -10,7 +10,7 @@ export default function DashboardAdmin() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("/api/dashboard");
+        const response = await fetch("/api/dashboard", { cache: "no-store" });
         const data = await response.json();
 
         setPenjualan(data.totalPenjualan);

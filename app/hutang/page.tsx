@@ -31,8 +31,8 @@ const HutangPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("/api/hutang");
-      const data = res.data;
+      const res = await fetch("/api/hutang", { cache: "no-store" });
+      const data = await res.json();
       setData(data);
     } catch (error) {
       console.log("error", error);

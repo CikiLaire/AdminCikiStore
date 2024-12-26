@@ -44,8 +44,10 @@ const LaporanPage = () => {
     }
   };
 
-  const filteredProduk = data.filter((item) =>
-    item.namaBarang.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProduk = data.filter(
+    (item) =>
+      item.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.namaPelanggan.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredProduk.length / itemsPerPage);
@@ -55,7 +57,7 @@ const LaporanPage = () => {
   );
 
   return (
-    <>
+    <div>
       {isError && (
         <div className="toast">
           <div className="alert alert-error">
@@ -97,76 +99,74 @@ const LaporanPage = () => {
             </label>
           </div>
         </div>
-        <div>
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Tanggal</th>
+                <th>Nama Pelanggan</th>
+                <th>Kategori</th>
+                <th>Status</th>
+                <th>Pendapatan</th>
+                <th>Modal</th>
+                <th>Untung</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
                 <tr>
-                  <th>No</th>
-                  <th>Nama Produk</th>
-                  <th>Tanggal</th>
-                  <th>Nama Pelanggan</th>
-                  <th>Kategori</th>
-                  <th>Status</th>
-                  <th>Pendapatan</th>
-                  <th>Modal</th>
-                  <th>Untung</th>
+                  <td colSpan={9} className="text-center">
+                    <LoadingButton />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={9} className="text-center">
-                      <LoadingButton />
-                    </td>
+              ) : filteredProduk.length === 0 ? (
+                <tr className="hover">
+                  <td colSpan={9} className="text-center">
+                    Belum ada penjualan.
+                  </td>
+                </tr>
+              ) : (
+                paginatedData.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className={`${
+                      item.status === "Belum Lunas" ? "bg-red-100/10" : ""
+                    }`}
+                  >
+                    <th>{(currentPage - 1) * itemsPerPage + index + 1}</th>
+                    <td>{item.namaBarang}</td>
+                    <td>{formatTanggal(item.tanggal)}</td>
+                    <td>{item.namaPelanggan}</td>
+                    <td>{item.kategori}</td>
+                    <td>{item.status}</td>
+                    <td>{formatRupiah(item.hargaJual)}</td>
+                    <td>{formatRupiah(item.hargaModal)}</td>
+                    <td>{formatRupiah(item.hargaJual - item.hargaModal)}</td>
                   </tr>
-                ) : filteredProduk.length === 0 ? (
-                  <tr className="hover">
-                    <td colSpan={9} className="text-center">
-                      Belum ada penjualan.
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedData.map((item, index) => (
-                    <tr
-                      key={item.id}
-                      className={`${
-                        item.status === "Belum Lunas" ? "bg-red-100/10" : ""
-                      }`}
-                    >
-                      <th>{(currentPage - 1) * itemsPerPage + index + 1}</th>
-                      <td>{item.namaBarang}</td>
-                      <td>{formatTanggal(item.tanggal)}</td>
-                      <td>{item.namaPelanggan}</td>
-                      <td>{item.kategori}</td>
-                      <td>{item.status}</td>
-                      <td>{formatRupiah(item.hargaJual)}</td>
-                      <td>{formatRupiah(item.hargaModal)}</td>
-                      <td>{formatRupiah(item.hargaJual - item.hargaModal)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-end mt-5">
-            <div className="join">
-              {[...Array(totalPages)].map((_, index) => (
-                <button
-                  key={index}
-                  className={`join-item btn ${
-                    currentPage === index + 1 ? "btn-active" : ""
-                  }`}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-end mt-5">
+          <div className="join">
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                className={`join-item btn ${
+                  currentPage === index + 1 ? "btn-active" : ""
+                }`}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
